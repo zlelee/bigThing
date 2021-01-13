@@ -18,13 +18,21 @@ app.use((req, res, next) => {
   }
   next()
 })
-
+const joi = require('@hapi/joi')
 //导入用户路由
 const user = require('./router/user')
 app.use('/api', user)
 //导入mysql模块
 const mysql = require('./db/index')
+const joi = require('@hapi/joi')
 
+// 错误中间件
+app.use(function (err, req, res, next) {
+  // 数据验证失败
+  if (err instanceof joi.ValidationError) return res.cc(err)
+  // 未知错误
+  res.cc(err)
+})
 //开启服务器
 app.listen(800, () => {
   console.log('your server running at http://127.0.0.1:800')
