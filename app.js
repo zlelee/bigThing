@@ -4,3 +4,5 @@ const express = require('express')
 const app = express()
 //导入cors
 const cors = require('cors')
+//导入用户路由
+const user = require('./router/user')
