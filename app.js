@@ -9,16 +9,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 //对res.send进行优化
-app.use((req, res, next) => {
-  res.cc = function (err, status = 1) {
-    res.send({
-      status,
-      message: err instanceof Error ? err.message : err
-    })
-  }
-  next()
-})
-const joi = require('@hapi/joi')
+app.use(require('./middleware/optimizeSend'))
+
 //导入用户路由
 const user = require('./router/user')
 app.use('/api', user)
@@ -26,13 +18,6 @@ app.use('/api', user)
 const mysql = require('./db/index')
 
 // 错误中间件
-app.use(function (err, req, res, next) {
-  // 数据验证失败
-  if (err instanceof joi.ValidationError) return res.cc(err)
-  // 未知错误
-  res.cc(err)
-})
+app.use(require('./middleware/errorHandlers'))
 //开启服务器
-app.listen(800, () => {
-  console.log('your server running at http://127.0.0.1:800')
-})
+app.listen(800, () => console.log('your server running at http://127.0.0.1:800'))
