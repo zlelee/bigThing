@@ -4,8 +4,21 @@ const express = require('express')
 const app = express()
 //导入cors
 const cors = require('cors')
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+
+//对res.send进行优化
+app.use((req, res, next) => {
+  res.cc = function (err, status = 1) {
+    res.send({
+      status,
+      message: err instanceof Error ? err.message : err
+    })
+  }
+  next()
+})
+
 //导入用户路由
 const user = require('./router/user')
 app.use('/api', user)
