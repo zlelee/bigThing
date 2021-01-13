@@ -3,7 +3,7 @@ const router = express.Router()
 
 const routerHandler = require('../router_handler/user')
 
-router.post('/reguser', reguser)
-router.post('/login', login)
+router.post('/reguser', routerHandler.reguser)
+router.post('/login', routerHandler.login)
 //向外部暴露router
 module.exports = router
