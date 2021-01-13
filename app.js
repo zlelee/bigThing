@@ -24,7 +24,6 @@ const user = require('./router/user')
 app.use('/api', user)
 //导入mysql模块
 const mysql = require('./db/index')
-const joi = require('@hapi/joi')
 
 // 错误中间件
 app.use(function (err, req, res, next) {
