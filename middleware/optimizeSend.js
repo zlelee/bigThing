@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => {
+module.exports.fn = (req, res, next) => {
   res.cc = function (err, status = 1) {
     res.send({
       status,
