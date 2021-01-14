@@ -1,6 +1,12 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const db = require('../db/index')
+// 用这个包来生成 Token 字符串
+const jwt = require('jsonwebtoken')
+// 导入配置文件
+const config = require('../config')
+
+//注册接口
 exports.reguser = (req, res) => {
   const userinfo = req.body
   //检测是否为空
@@ -34,6 +40,34 @@ exports.reguser = (req, res) => {
     )
   })
 }
+
+//登录接口
 exports.login = (req, res) => {
-  res.send('login ok')
+  const userinfo = req.body
+  const sql = 'select * from ev_users where username=?'
+  db.query(sql, userinfo.username, (err, results) => {
+    if (err) return res.cc(err)
+    if (results.length !== 1) return res.cc('用户不存在,登录失败')
+    // 拿着用户输入的密码,和数据库中存储的密码进行对比
+    const compareResult = bcrypt.compareSync(userinfo.password, results[0].password)
+
+    // 如果对比的结果等于 false, 则证明用户输入的密码错误
+    if (!compareResult) {
+      return res.cc('登录失败！')
+    }
+
+    // TODO：登录成功，生成 Token 字符串
+    // 剔除完毕之后，user 中只保留了用户的 id, username, nickname, email 这四个属性的值
+    const user = { ...results[0], password: '', user_pic: '' }
+    // 生成 Token 字符串
+    const tokenStr = jwt.sign(user, config.jwtSecretKey, {
+      expiresIn: '10h' // token 有效期为 10 个小时
+    })
+    res.send({
+      status: 0,
+      message: '登录成功！',
+      // 为了方便客户端使用 Token，在服务器端直接拼接上 Bearer 的前缀
+      token: 'Bearer ' + tokenStr
+    })
+  })
 }
