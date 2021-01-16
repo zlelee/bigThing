@@ -16,7 +16,8 @@ app.use(express.json())
 app.use(require('./middleware/optimizeSend').fn)
 // 使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
 app.use(expressJWT({ secret: config.jwtSecretKey }).unless({ path: [/^\/api\//] }))
-
+// 托管静态资源文件
+app.use('/uploads', express.static('./uploads'))
 //导入用户路由
 const userinfo = require('./router/userinfo')
 app.use('/my', userinfo)
