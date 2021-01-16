@@ -8,6 +8,7 @@ const password = joi
   .string()
   .pattern(/^[\S]{6,12}$/)
   .required()
+const avatar = joi.string().dataUri().required()
 exports.reg_login_schema = {
   // 表示需要对 req.body 中的数据进行验证
   body: {
@@ -34,5 +35,10 @@ exports.update_password_schema = {
     // 2. joi.not(joi.ref('oldPwd')) 表示 newPwd 的值不能等于 oldPwd 的值
     // 3. .concat() 用于合并 joi.not(joi.ref('oldPwd')) 和 password 这两条验证规则
     newPwd: joi.not(joi.ref('oldPwd')).concat(password)
+  }
+}
+exports.update_avatar_schema = {
+  body: {
+    avatar
   }
 }
