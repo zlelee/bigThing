@@ -24,6 +24,8 @@ const user = require('./router/user')
 app.use('/api', user)
 const artCateRouter = require('./router/artcate')
 app.use('/my/article', artCateRouter)
+const articleRouter = require('./router/articles')
+app.use('/my/article', articleRouter)
 // 错误中间件
 app.use(require('./middleware/errorHandlers').fn)
 //开启服务器

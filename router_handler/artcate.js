@@ -59,7 +59,11 @@ exports.updateCateById = (req, res) => {
     if (results.length === 2) return res.cc('分类名称和别名被占用')
     if (results.length === 1 && req.body.name === results[0].name) return res.cc('分类名称被占用')
     if (results.length === 1 && req.body.alias === results[0].alias) return res.cc('别名被占用')
-    console.log(results)
-    res.send('ok')
+    const sql = `update ev_article_cate set ? where Id=?`
+    db.query(sql, req.body.Id, (err, results) => {
+      if (err) return res.cc(err)
+      if (results.affectedRows !== 1) return res.cc('更新分类失败')
+      res.cc('更新分类成功')
+    })
   })
 }
