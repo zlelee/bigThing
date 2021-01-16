@@ -22,7 +22,8 @@ const userinfo = require('./router/userinfo')
 app.use('/my', userinfo)
 const user = require('./router/user')
 app.use('/api', user)
-
+const artCateRouter = require('./router/artcate')
+app.use('/my/article', artCateRouter)
 // 错误中间件
 app.use(require('./middleware/errorHandlers').fn)
 //开启服务器
